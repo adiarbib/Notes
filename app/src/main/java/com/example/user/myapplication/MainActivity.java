@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Note> notesArrayList;
     private NotesService noteService;
-
     private GridView gridView;
     private ArrayAdapter<Note> notesAdapter;
 
@@ -133,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid)
         {
+
+
 
         }
     }
