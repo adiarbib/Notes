@@ -1,34 +1,21 @@
 package com.example.user.myapplication;
 
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.parse.Parse;
+
 import java.util.ArrayList;
-import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,13 +28,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Parse.initialize(new Parse.Configuration.Builder(this)
+                .applicationId("Your Back4app application ID")
+                .clientKey("You can found it on b4a core setting")
+                .server("https://parseapi.back4app.com/").build()
+        );
 
         noteService = new InternalStorageImplement(this);
 
         gridView = (GridView)findViewById(R.id.grid);
-
-        /*ImageButton plus=(ImageButton)findViewById(R.id.plus_btn);
-        ImageButton minus=(ImageButton)findViewById(R.id.minus_btn);*/
 
         ArrayList<Note> notesArrayList = new ArrayList<>();
 
@@ -63,12 +52,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notesAdapter.add(noteService.createNewNote());
-            }
-        });*/
 
         new LoadAllNotes().execute();
     }
@@ -119,21 +102,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class NewNoteTask extends AsyncTask<Void, Void, Void>
+    class NewNoteTask extends AsyncTask<Void, Void, Note>
     {
         @Override
-        protected Void doInBackground(Void... params)
+        protected Note doInBackground(Void... params)
         {
-            noteService.createNewNote();
-
-            return null;
+            Note note =noteService.createNewNote();
+            return note;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid)
+        protected void onPostExecute(Note note)
         {
-
-
+            Intent intent=new Intent(MainActivity.this,EditNote.class);
+            intent.putExtra("edit",note);
 
         }
     }

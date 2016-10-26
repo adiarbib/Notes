@@ -1,9 +1,11 @@
 package com.example.user.myapplication;
 
+import java.io.Serializable;
+
 /**
  * Created by User on 06/10/2016.
  */
-public class Note
+public class Note implements Serializable
 {
     String title;
     String content;
