@@ -4,6 +4,7 @@ package com.example.user.myapplication;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
@@ -28,11 +29,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Parse.initialize(new Parse.Configuration.Builder(this)
+        /*Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("Your Back4app application ID")
                 .clientKey("You can found it on b4a core setting")
                 .server("https://parseapi.back4app.com/").build()
-        );
+        );*/
+
+        FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new NewNoteTask().execute();
+            }
+        });
 
         noteService = new InternalStorageImplement(this);
 
@@ -47,18 +56,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Note note = notesAdapter.getItem(position);
-
-                //TODO: do stuff
+                Intent intentEdit=new Intent(MainActivity.this,EditNote.class);
+                intentEdit.putExtra("edit",note);
+                startActivity(intentEdit);
             }
         });
 
-
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                new DeleteNote().execute(notesAdapter.getItem(position));
+                return true;
+            }
+        });
         new LoadAllNotes().execute();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -114,9 +129,23 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Note note)
         {
-            Intent intent=new Intent(MainActivity.this,EditNote.class);
-            intent.putExtra("edit",note);
+            Intent intentEdit=new Intent(MainActivity.this,EditNote.class);
+            intentEdit.putExtra("edit",note);
+            startActivity(intentEdit);
+        }
+    }
 
+    class DeleteNote extends AsyncTask<Note,Void,Note>
+    {
+        @Override
+        protected Note doInBackground(Note... params) {
+            noteService.delete(params[0]);
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute(Note note) {
+            notesAdapter.remove(note);
         }
     }
 }

@@ -43,6 +43,6 @@ public class Note implements Serializable
 
     @Override
     public String toString() {
-        return super.toString();
+        return content;
     }
 }

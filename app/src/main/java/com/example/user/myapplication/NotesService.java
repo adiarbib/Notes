@@ -10,9 +10,13 @@ import java.util.List;
  */
 public interface NotesService {
 
-    public Note createNewNote();
-    public void updateNote(Note note);
-    public ArrayList<String> getNoteNames();
+    Note createNewNote();
+
+    void updateNote(Note note);
+
+    ArrayList<String> getNoteNames();
+
     Note loadNote(String fileName);
+
     void delete(Note note);
 }
