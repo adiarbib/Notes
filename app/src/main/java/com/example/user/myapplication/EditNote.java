@@ -8,6 +8,7 @@ import android.widget.EditText;
 public class EditNote extends AppCompatActivity {
     Note thisNote;
     private NotesService noteService;
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,16 +17,14 @@ public class EditNote extends AppCompatActivity {
         noteService=new InternalStorageImplement(this);
         Intent editIntent=getIntent();
         thisNote=(Note)editIntent.getSerializableExtra("edit");
-        EditText editText=(EditText)findViewById(R.id.editText);
-        editText.setText(thisNote.content.toString());
-
-
-
-
+        editText=(EditText)findViewById(R.id.editText);
+        editText.setText(thisNote.getContent().toString());
     }
 
     @Override
     public void onBackPressed() {
+        thisNote.setContent(editText.getText().toString());
+        thisNote.setTitle(editText.getText().toString().split("\n")[0]);
         noteService.updateNote(thisNote);
         super.onBackPressed();
     }

@@ -7,9 +7,9 @@ import java.io.Serializable;
  */
 public class Note implements Serializable
 {
-    String title;
-    String content;
-    String fileName;
+    private String title;
+    private String content;
+    private String fileName;
 
     public Note(String title, String content, String fileName) {
         this.title = title;
@@ -43,6 +43,6 @@ public class Note implements Serializable
 
     @Override
     public String toString() {
-        return content;
+        return title;
     }
 }

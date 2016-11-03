@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -41,12 +43,12 @@ public class InternalStorageImplement implements NotesService {
     public void updateNote(Note note) {
         try {
             FileOutputStream outputStream = context.openFileOutput(note.getFileName(), Context.MODE_PRIVATE);
-            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-            writer.write(note.content);
-            outputStream.close();
+            PrintWriter writer = new PrintWriter(outputStream);
+            writer.write(note.getContent());
             writer.close();
+            outputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
